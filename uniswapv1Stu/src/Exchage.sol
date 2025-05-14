@@ -11,13 +11,29 @@ contract Exchange {
     }
 
     //增加流动性，就是增加给当前合约多少代币 后续会有花
-    function addLiquidity(uint256 amount) public payable {
+    function addLiquidity(uint256 _tokenAmount) public payable {
         IERC20 token = IERC20(tokenTestAddress);
-        token.transferFrom(msg.sender, address(this), amount);
+        //如果之前是没有流动性的那么
+        if (getReserve() == 0) {
+            token.transferFrom(msg.sender, address(this), _tokenAmount);
+            return;
+        }
+        //得到之前eth的储备量
+        uint256 ethReserve = address(this).balance - msg.value;
+        //得到当前token的储备粮
+        uint256 tokenReserve = getReserve();
+        //得到需要增加token储备的钱数
+        //Px/Py = x/y 比例必须相同
+        //由此得出公式x*Py/y
+        uint256 neetTokenAmount = (msg.value * tokenReserve) / ethReserve;
+        //必须相同 不能多出
+        require(_tokenAmount == neetTokenAmount, "insufficient token amount");
+
+        token.transferFrom(msg.sender, address(this), _tokenAmount);
     }
 
     //当前合约有多少代币
-    function getReserve() public returns (uint256) {
+    function getReserve() public view returns (uint256) {
         return IERC20(tokenTestAddress).balanceOf(address(this));
     }
 
