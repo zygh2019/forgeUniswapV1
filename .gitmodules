@@ -1,0 +1,6 @@
+[submodule "uniswapv1Stu/lib/forge-std"]
+	path = uniswapv1Stu/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
+[submodule "uniswapv1Stu/lib/openzeppelin-contracts"]
+	path = uniswapv1Stu/lib/openzeppelin-contracts
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts
